@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أحياء دقيقة وأخلاقيات</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#eef2f7;color:#0f172a;line-height:1.6;padding-bottom:60px}
+#err{display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;font-size:14px;direction:ltr}
+.wrap{max-width:820px;margin:0 auto;padding:0 12px}
+.hero{background:linear-gradient(135deg,#0e7490,#0891b2);color:#fff;border-radius:0 0 22px 22px;padding:28px 18px 22px;text-align:center}
+.hero h1{font-size:26px;margin-bottom:4px}
+.hero p{opacity:.9;font-size:14px}
+.hero .by{margin-top:6px;font-weight:700;letter-spacing:.04em}
+.filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 6px}
+.fbtn{padding:8px 14px;border-radius:20px;border:2px solid #0e7490;background:#fff;color:#0e7490;font-weight:700;font-size:13px;cursor:pointer}
+.fbtn.active{background:#0e7490;color:#fff}
+.count{text-align:center;color:#475569;font-size:14px;margin-bottom:6px}
+.bar{position:sticky;top:0;z-index:50;background:#0f172a;color:#fff;padding:8px 12px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700}
+.bar .pill{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:14px}
+.pg{flex:1;min-width:60px;height:6px;background:rgba(255,255,255,.2);border-radius:6px;overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:#22d3ee;transition:width .3s}
+.sec{margin:26px 0 6px;text-align:center;font-weight:700;color:#0e7490;font-size:14px;background:#e0f2fe;border:1px solid #bae6fd;border-radius:12px;padding:8px 12px}
+.card{background:#fff;border-radius:16px;padding:18px 16px;margin:12px 0;box-shadow:0 2px 12px rgba(15,23,42,.08);border-right:6px solid #cbd5e1}
+.card.ok{border-right-color:#10b981}.card.no{border-right-color:#ef4444}
+.qh{display:flex;align-items:center;gap:8px;margin-bottom:10px;direction:ltr}
+.qn{background:#0e7490;color:#fff;min-width:32px;height:32px;border-radius:16px;padding:0 8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.tag{background:#e0f2fe;color:#0e7490;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700}
+.qt{font-size:16px;font-weight:700;direction:ltr;text-align:left;margin-bottom:12px}
+.fig{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:6px;margin-bottom:12px;direction:ltr}
+
+.hint{font-size:13px;color:#0e7490;margin-bottom:8px}
+.opts{display:flex;flex-direction:column;gap:8px;direction:ltr}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;width:100%;padding:11px 12px;border:2px solid #e2e8f0;border-radius:12px;background:#fff;font-size:15px;cursor:pointer;color:#1e293b}
+.opt b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:13px;background:#f1f5f9;border:2px solid #cbd5e1;font-size:12px;flex-shrink:0}
+.opt.sel{border-color:#0e7490;background:#ecfeff}
+.opt.right{border-color:#10b981;background:#ecfdf5;color:#065f46;font-weight:700}
+.opt.right b{background:#10b981;border-color:#10b981;color:#fff}
+.opt.bad{border-color:#ef4444;background:#fef2f2;color:#7f1d1d}
+.opt.bad b{background:#ef4444;border-color:#ef4444;color:#fff}
+.inp{width:100%;padding:11px 12px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;margin-bottom:8px;direction:ltr}
+.inp.ok{border-color:#10b981;background:#ecfdf5}.inp.no{border-color:#ef4444;background:#fef2f2}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{padding:10px 18px;border:0;border-radius:12px;background:#0e7490;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+.btn.gh{background:#e2e8f0;color:#334155}.btn.g{background:#059669}.btn.r{background:#dc2626}
+.btn:disabled{opacity:.5;cursor:default}
+.solbox{display:none;margin-top:12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:10px;direction:ltr;font-size:14px}
+.solbox .ans{font-weight:700;color:#0e7490;border-bottom:1px dashed #bae6fd;padding-bottom:6px;margin-bottom:6px}
+.grade{display:none;margin-top:10px}
+.fb{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;font-size:14px}
+.fb.ok{background:#ecfdf5;color:#065f46;border-right:4px solid #10b981}
+.fb.no{background:#fef2f2;color:#7f1d1d;border-right:4px solid #ef4444}
+.note{margin-top:6px;padding:6px 10px;background:#fffbeb;border:1px solid #fcd34d;color:#92400e;border-radius:8px}
+.sub{display:block}
+#result{display:none;background:#fff;border-radius:18px;padding:22px 16px;margin:20px 0;text-align:center;box-shadow:0 4px 20px rgba(15,23,42,.12)}
+#result h2{margin-bottom:6px}
+.big{font-size:44px;font-weight:900;color:#0e7490}
+.stats{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.stat{flex:1;border-radius:12px;padding:10px;font-weight:700}
+.stat.c{background:#ecfdf5;color:#059669}.stat.w{background:#fef2f2;color:#dc2626}.stat.p{background:#fffbeb;color:#d97706}
+.rev{text-align:right;margin-top:14px}
+.ri{background:#fef2f2;border-right:4px solid #ef4444;border-radius:10px;padding:10px;margin-bottom:8px;font-size:14px}
+.ri .q{font-weight:700;direction:ltr;text-align:left}
+.sbtn{display:block;margin:20px auto 0;padding:14px 50px;font-size:16px}
+
+.qt{overflow-wrap:anywhere}
+.top{position:sticky;top:0;z-index:60;background:#0f172a;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.tabs{display:flex;max-width:820px;margin:0 auto}
+.tab{flex:1;padding:11px 4px 9px;border:0;background:transparent;color:#94a3b8;font-weight:700;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+.tab small{display:block;font-weight:400;font-size:10.5px;opacity:.8}
+.tab.on{color:#fff;border-bottom-color:#22d3ee;background:rgba(255,255,255,.06)}
+.bar{position:static;box-shadow:none;padding:6px 12px 8px}
+.panel{display:none}
+.panel.on{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:.2;transform:translateX(14px)}to{opacity:1;transform:none}}
+.swipehint{text-align:center;color:#64748b;font-size:12px;margin:2px 0 6px}
+</style>
+</head>
+<body>
+<div id="err"></div>
+<div class="hero">
+  <h1>🧫 أحياء دقيقة + ⚖️ أخلاقيات</h1>
+  <p>Microbiology · Medical Ethics — مراجعة المحاضرات 1–4</p>
+  <p class="by">BY MOSTAFA SALLAM</p>
+</div>
+<div class="top">
+  <div class="tabs" id="tabs"></div>
+  <div class="bar"><div class="bar-in">
+    <span class="pill" id="sNum">0/0</span><span class="pill" id="sC">✅ 0</span><span class="pill" id="sW">❌ 0</span><span class="pill" id="sP">📊 0%</span>
+    <div class="pg"><i id="sFill"></i></div>
+  </div></div>
+</div>
+<div class="wrap">
+  <div class="swipehint">↔ اسحب يمين أو شمال للتنقل بين الأقسام، أو اختار من فوق</div>
+  <div id="panels"><div class="card" style="text-align:center;direction:rtl">⏳ جاري تحميل الأسئلة...<br><small>لو الرسالة دي فضلت ظاهرة يبقى الكود اتنسخ ناقص أو الصفحة مش مفتوحة من رابط github.io.</small></div></div>
+</div>
+<script>
+window.onerror=function(m,s,l){var e=document.getElementById('err');if(e){e.style.display='block';e.textContent='JS error: '+m+' (line '+l+')';}};
+var L='ABCDEFGHIJKLM'.split('');
+var TABS=[{k:'m',label:'🧫 أحياء دقيقة',sub:'Microbiology'},{k:'e',label:'⚖️ أخلاقيات',sub:'Ethics'}];
+var SECS={"m1": {"tag": "Microbiology", "title": "مراجعة على المحاضرات — الأحياء الدقيقة 1–4"}, "e1": {"tag": "Ethics · MCQ", "title": "أسئلة للمراجعة على محاضرات الأخلاقيات 1–4 — اختيار من متعدد"}, "e2": {"tag": "Ethics · T/F", "title": "Put true or false"}};
+var NSTM=[];
+var ALL=[
+{"n":1,"s":"m","sec":"m1","num":"1","type":"mcq","q":"Bacteria have very small size, so it measured by……………………","o":["Microns","Nanometers","Millimeter","None of above","Bacteriophage"],"c":0},
+{"n":2,"s":"m","sec":"m1","num":"2","type":"mcq","q":"The DNA of Prokaryotes are …………………in shape.","o":["Circular","Linear","Helical","None of the above"],"c":0},
+{"n":3,"s":"m","sec":"m1","num":"3","type":"mcq","q":"In eukaryotic cell……………….","o":["DNA is linear","has a nucleus","Reproduction by mitosis and meiosis","All of the above"],"c":3},
+{"n":4,"s":"m","sec":"m1","num":"4","type":"mcq","q":"……………………....help in protection of the bacterial cell when it engulfed by other organisms.","o":["Flagella","Pilli","Ribosomes","Capsule"],"c":3},
+{"n":5,"s":"m","sec":"m1","num":"5","type":"mcq","q":"All of the following are essential structures except………………..","o":["Capsule","Cell wall","Nucleoid","Cytoplasm"],"c":0},
+{"n":6,"s":"m","sec":"m1","num":"6","type":"mcq","q":"….................... is non essential structure responsible for motility","o":["Pilli","Spores","Flagella","Cell wall"],"c":2},
+{"n":7,"s":"m","sec":"m1","num":"7","type":"mcq","q":"….................... is non essential structure responsible for motility","o":["Pilli","Spores","Flagella","Cell wall"],"c":2},
+{"n":8,"s":"m","sec":"m1","num":"8","type":"mcq","q":"The chromosome of bacteria is…………………","o":["Haploid","Diploid","Polyploid","Triploid"],"c":0},
+{"n":9,"s":"m","sec":"m1","num":"9","type":"mcq","q":"Bacteria reproduce by ………………….","o":["Binary fission","Mitosis","Polyploid","Meiosis"],"c":0},
+{"n":10,"s":"m","sec":"m1","num":"10","type":"mcq","q":"…………………..is non-essential component of bacterial cell","o":["Fimbria","cytoplasm","cell wall","nucleoid"],"c":0},
+{"n":11,"s":"m","sec":"m1","num":"11","type":"mcq","q":"The intracellular organelles of bacteria include………………","o":["Fimbria & flagella","Cell wall & cytoplasmic membrane","Nucleoid and Ribosomes","nucleoid"],"c":2},
+{"n":12,"s":"m","sec":"m1","num":"12","type":"mcq","q":"All of the following are essential structures of bacteria except……………","o":["Cell wall","Cytoplasm","Spores","DNA"],"c":2},
+{"n":13,"s":"m","sec":"m1","num":"13","type":"mcq","q":"………………………is outer covering present in all cells that protects the Bacterial cell and gives it shapes","o":["Capsule","Cell wall","Nucleoid","Cytoplasm"],"c":1},
+{"n":14,"s":"m","sec":"m1","num":"14","type":"mcq","q":"The function of cytoplasmic membrane is………………………..","o":["Shape of bacteria","Motility","Selective permeability","Resist dryness"],"c":2},
+{"n":15,"s":"m","sec":"m1","num":"15","type":"mcq","q":"The function of flagella is…………………","o":["Respiration","Movement","Reproduction","Fermentation"],"c":1},
+{"n":16,"s":"m","sec":"m1","num":"16","type":"mcq","q":"The structure that is responsible for the shape of bacteria is…………………","o":["Cell wall","Spores","Cytoplasm","Capsule"],"c":0},
+{"n":17,"s":"m","sec":"m1","num":"17","type":"mcq","q":"Most bacteria need all of the following for their growth except………………….","o":["Nutrition","Gases","Light","Moisture"],"c":2},
+{"n":18,"s":"m","sec":"m1","num":"18","type":"mcq","q":"Which of the following bacteria is coma shaped?","o":["Streptococci","vibrio Cholera","Diphtheria","none of these."],"c":1},
+{"n":19,"s":"m","sec":"m1","num":"19","type":"mcq","q":"………………….. decides the ability of bacteria to be stained by Gram stain.","o":["Cell wall","Spores","Cytoplasm","Capsule"],"c":0},
+{"n":20,"s":"m","sec":"m1","num":"20","type":"mcq","q":"Cell wall decides the ability of bacteria to be stained by bacterial stains due to presence of …………………….","o":["Peptidoglycan","Pilli","Cell membrane","Capsule"],"c":0},
+{"n":21,"s":"m","sec":"m1","num":"21","type":"mcq","q":"………………….is one of essential component of bacterial cell consisted of 80% water, containing lipids, carbohydrates, ions, enzymes and inclusion granules.","o":["Cell wall","Nucleoid","Cytoplasm","Ribosomes"],"c":2},
+{"n":22,"s":"m","sec":"m1","num":"22","type":"mcq","q":"……………………is a hair-like appendages on the surface of many bacteria, responsible for adhesion and attachment of bacterial cell to the surface of the host cell.","o":["Flagella","Pilli","Cell membrane","Capsule"],"c":1},
+{"n":23,"s":"m","sec":"m1","num":"23","type":"mcq","q":"……………………..is non-essential structure of bacterial cell used for sense temperature and chemicals","o":["Flagella","Pilli","Cell membrane","Capsule"],"c":0},
+{"n":24,"s":"m","sec":"m1","num":"24","type":"mcq","q":"………………………is non-essential structure of bacterial cell used for attachment and conjugation","o":["Flagella","Pilli","Cell membrane","Capsule"],"c":1},
+{"n":25,"s":"m","sec":"m1","num":"25","type":"mcq","q":"……………………….is bacterial cell structures responsible for protein synthesis from mRNA.","o":["Ribosome","Spore","Cell membrane","Nucleoid"],"c":0},
+{"n":26,"s":"m","sec":"m1","num":"26","type":"mcq","q":"………………………..is called chromatin body or bacterial chromosome","o":["Nucleoid","Plasmid","Cell membrane","Capsule"],"c":0},
+{"n":27,"s":"m","sec":"m1","num":"27","type":"mcq","q":"…………………………is the structure that is formed under unfavorable condition.","o":["Pilli","Capsule","Spore","Flagella"],"c":2},
+{"n":28,"s":"m","sec":"m1","num":"28","type":"mcq","q":"The outer layer of spore consists of………………………….","o":["Cytoplasmic membrane","Keratin coated protein","Normal peptidoglycan","less cross linked peptidoglycan"],"c":1},
+{"n":29,"s":"m","sec":"m1","num":"29","type":"mcq","q":"………………………is inactive form of the bacteria (dormant cell) which can survive and allow the bacteria to resist adverse environmental conditions.","o":["Pilli","Capsule","Spore","Flagella"],"c":2},
+{"n":30,"s":"m","sec":"m1","num":"30","type":"mcq","q":"Site of spores in side bacterial cells may be………………………..","o":["terminal","lateral","Superficial","Cranial"],"c":0},
+{"n":31,"s":"m","sec":"m1","num":"31","type":"mcq","q":"Spore can resist adverse environmental conditions which is not suitable for the bacteria due to presence of………………","o":["Hydrochloric acid","Acetoacetic acid","Dipiclonic acid","Dihydrochloric acid"],"c":2},
+{"n":32,"s":"m","sec":"m1","num":"32","type":"mcq","q":"The gram +ve bacteria appear……………….in color by gram stain.","o":["Brownish","violet","Red","Greenish"],"c":1},
+{"n":33,"s":"m","sec":"m1","num":"33","type":"mcq","q":"………………………are Ultramicroscopic, obligate intracellular parasites that contain only one type of nucleic acid, either DNA or RNA, surrounded by Capsid.","o":["Viruses","Fungi","Plant cell","Bacteria"],"c":0},
+{"n":34,"s":"m","sec":"m1","num":"34","type":"mcq","q":"……….…………….are considered a cellular microorganisms.","o":["Bacteria","Viruses","Fungi","Algae"],"c":1},
+{"n":35,"s":"m","sec":"m1","num":"35","type":"mcq","q":"Pilli found in…………………………….","o":["gram +ve bacteria only","both gram +ve and -ve bacteria","gram -ve bacteria only","non of the above"],"c":2},
+{"n":36,"s":"m","sec":"m1","num":"36","type":"mcq","q":"Bacteria appear under microscope as spheres shape are …………………….","o":["streptococci","staphylococci","salmonella","a & b"],"c":3},
+{"n":37,"s":"m","sec":"m1","num":"37","type":"mcq","q":"All of the following may be the shape of bacteria except……………………","o":["Cocci","Bacilli","Spiral","Square"],"c":3},
+{"n":38,"s":"m","sec":"m1","num":"38","type":"mcq","q":"The Rod shape bacteria mean the bacteria are……………………...","o":["Cocci shape","Bacilli shape","Spiral shape","Cluster shape"],"c":1},
+{"n":39,"s":"m","sec":"m1","num":"39","type":"mcq","q":"Prokaryote organelles………………….","o":["has no nucleus","has a nucleus","has 80s ribosomes","all of the above"],"c":0},
+{"n":40,"s":"m","sec":"m1","num":"40","type":"mcq","q":"Bacteria can exist as……………………………..","o":["single cells","chains or clusters","in pairs,","all of the above"],"c":3},
+{"n":41,"s":"m","sec":"m1","num":"41","type":"mcq","q":"The bacteria that growing in presence or absence of O2 called………………………..","o":["Obligatory aerobes","Obligatory Anaerobes","Facultative anaerobes","Microaerophilic"],"c":2},
+{"n":42,"s":"m","sec":"m1","num":"42","type":"mcq","q":"The…………...bacteria grow only in presence of O2.","o":["Obligatory aerobes","Obligatory Anaerobes","Facultative anaerobes","Microaerophilic"],"c":0},
+{"n":43,"s":"m","sec":"m1","num":"43","type":"mcq","q":"The……………………. bacteria grow only in Absence of O2","o":["Obligatory aerobes","Obligatory Anaerobes","Facultative anaerobes","Microaerophilic"],"c":1},
+{"n":44,"s":"m","sec":"m1","num":"44","type":"mcq","q":"Clostridia considered as…………………….","o":["Facultative anaerobes","Obligatory Anaerobes","Obligatory Aerobes","Microaerophilic"],"c":1},
+{"n":45,"s":"m","sec":"m1","num":"45","type":"mcq","q":"…………………………..is the Constituent of amino acids and nucleic acids.","o":["Oxygen","Nitrogen","Carbon dioxide","all of the above"],"c":1},
+{"n":46,"s":"m","sec":"m1","num":"46","type":"mcq","q":"………………………….. is the Constituent of phospholipids of cell wall","o":["Oxygen","nitrogen","Hydrogen","phosphorus"],"c":3},
+{"n":47,"s":"m","sec":"m1","num":"47","type":"mcq","q":"Obligatory Aerobic bacteria grow only in presence of………………………….","o":["O2","small conc. O2","CO2","or absence (+/- O2)"],"c":0},
+{"n":48,"s":"m","sec":"m1","num":"48","type":"mcq","q":"…………………………..prefer cold temperatures (0-20°C)","o":["Psychrophilic bacteria","Mesophilic bacteria","Thermophilic bacteria","None of the above"],"c":0},
+{"n":49,"s":"m","sec":"m1","num":"49","type":"mcq","q":"…………………………..prefer moderate temperatures (20-40 °C).","o":["Psychrophilic bacteria","Mesophilic bacteria","Thermophilic bacteria","None of the above"],"c":1},
+{"n":50,"s":"m","sec":"m1","num":"50","type":"mcq","q":"…………………………..can survive in temperature higher than 40°C","o":["Psychrophilic bacteria","Mesophilic bacteria","Thermophilic bacteria","None of the above"],"c":2},
+{"n":51,"s":"m","sec":"m1","num":"51","type":"mcq","q":"Optimum temperature for most of the pathogenic bacteria is……………………","o":["47 ℃","37 ℃","27 ℃","none of these"],"c":1},
+{"n":52,"s":"m","sec":"m1","num":"52","type":"mcq","q":"For most bacteria, the optimum pH is between…………………....","o":["6.0 and 6.5","7.0 and 7.5","7.0 and 7.2","6.5 and 7.5"],"c":3},
+{"n":53,"s":"m","sec":"m1","num":"53","type":"mcq","q":"The optimum pH of ………………………………….. is between 6.5 and 7.5.","o":["Neutrophilic bacteria","human tissue","Acidophilic bacteria","non of the above"],"c":0},
+{"n":54,"s":"m","sec":"m1","num":"54","type":"mcq","q":"…………………………prefer acidic environments of 6.0 or below.","o":["Neutrophilic bacteria","alkaline bacteria","Acidophilic bacteria","all of the above"],"c":2},
+{"n":55,"s":"m","sec":"m1","num":"55","type":"mcq","q":"Bacterial toxins are toxins produced by bacteria, promote …………….","o":["Immunity","a & b","Infection","non of the above"],"c":2},
+{"n":56,"s":"m","sec":"m1","num":"56","type":"mcq","q":"Nature of bacterial exotoxins is ………..","o":["Lipopolysaccharides","vitamins","Protein","minerals"],"c":2},
+{"n":57,"s":"m","sec":"m1","num":"57","type":"mcq","q":"The bacteria that causes diphtheria produce……………………that promote infection and disease","o":["Toxin","Enzyme","Vitamin","Growth factor"],"c":0},
+{"n":58,"s":"m","sec":"m1","num":"58","type":"mcq","q":"The type of toxins that produced by Gram negative bacteria are……………….","o":["Exotoxins","a&c","Endotoxins","None of the above"],"c":2},
+{"n":59,"s":"m","sec":"m1","num":"59","type":"mcq","q":"The exotoxin are …………………","o":["extracellular component","ribonucleic acid","part of cell wall","peptidoglycan"],"c":0},
+{"n":60,"s":"m","sec":"m1","num":"60","type":"mcq","q":"E.coli are gram negative bacteria arranged in ………………shape","o":["Cluster","Rod","Cocci","comma"],"c":1},
+{"n":61,"s":"m","sec":"m1","num":"61","type":"mcq","q":"The endotoxin are…………………..in nature.","o":["Cytoplasmic membrane","peptidoglycan","Protein","lipopolysaccharides"],"c":3},
+{"n":62,"s":"m","sec":"m1","num":"62","type":"mcq","q":"The genome of Hepatitis B virus is ……………..","o":["ssRNA","dsDNA","ssDNA","dsRNA"],"c":1},
+{"n":63,"s":"m","sec":"m1","num":"63","type":"mcq","q":"The viruses possess……………………..","o":["Both DNA and RNA","DNA or RNA","Plasmid","capsid only"],"c":1},
+{"n":64,"s":"m","sec":"m1","num":"64","type":"mcq","q":"The infectious part of the virus is ………………………..","o":["Capsid","Plasmid","Nucleic acid","Envelope"],"c":2},
+{"n":65,"s":"m","sec":"m1","num":"65","type":"mcq","q":"…………………protect of the viral nucleic acid against nucleases.","o":["Nucleic acid","Envelop","Capsid","Epitopes"],"c":2},
+{"n":66,"s":"m","sec":"m1","num":"66","type":"mcq","q":"…………………is the part of virus that responsible for adherent of virus to host cell","o":["Nucleic acid","Envelop","Capsid","Epitopes"],"c":2},
+{"n":67,"s":"m","sec":"m1","num":"67","type":"mcq","q":"RNA virus are the viruses that possess…..……….. as their genetic material","o":["DNA","RNA","Plasmid","DNA & RNA"],"c":1},
+{"n":68,"s":"m","sec":"m1","num":"68","type":"mcq","q":"E. coli is normally lives in the ……………………of both healthy people and animals.","o":["Urinary system","Intestine","Lung","Skin"],"c":1},
+{"n":69,"s":"m","sec":"m1","num":"69","type":"mcq","q":"Phagocytosis is one of the function of……………………...","o":["Macrophages","NK cells","T helper cells","T cytotoxic cells"],"c":0},
+{"n":70,"s":"m","sec":"m1","num":"70","type":"mcq","q":"Antibodies are secreted by……………….","o":["T helper lymphocytes","Plasma cells","Cytotoxic T lymp hocytes.","Phagocytes."],"c":1},
+{"n":71,"s":"m","sec":"m1","num":"71","type":"mcq","q":"…………………….is athe resistance that is transferred to a recipient artificially in a ready-made form","o":["Active immunity","Passive immunity","vaccination","infection"],"c":1},
+{"n":72,"s":"m","sec":"m1","num":"72","type":"mcq","q":"Vaccination of patient with a microbe or its antigens providing a form of advance protection (life long) is type of……………………","o":["artificial Active adaptive immunity","artificial Passive adaptive immunity","natural Passive adaptive immunity","natural Acquired adaptive  immunity"],"c":0},
+{"n":73,"s":"m","sec":"m1","num":"73","type":"mcq","q":"Breastfeeding baby is form of …………………….","o":["Active immunity","Passive immunity","vaccination","infection"],"c":1},
+{"n":74,"s":"m","sec":"m1","num":"74","type":"mcq","q":"……………………is the host that easily infected by a parasite","o":["Tolerant Host","Refractory Host","Foreign Host","Transitory Host"],"c":0},
+{"n":75,"s":"m","sec":"m1","num":"75","type":"mcq","q":"……………………..is a host that gets infected but quickly clears or eliminates the parasite","o":["Tolerant Host","Refractory Host","Foreign Host","Transitory Host"],"c":3},
+{"n":76,"s":"m","sec":"m1","num":"76","type":"mcq","q":"…………………is a Copying or stealing the host's own molecules/antigens to disguise themselves as part of the host body (e.g., Schistosoma mansoni).","o":["Camouflage","Hypoantigenic","Antigenic variation","Opsonisation"],"c":0},
+{"n":77,"s":"m","sec":"m1","num":"77","type":"mcq","q":"……………………….is the marking the parasite so immune cells can eat/engulf it more efficiently","o":["Camouflage","Hypoantigenic","Antigenic variation","Opsonisation"],"c":3},
+{"n":78,"s":"m","sec":"m1","num":"78","type":"mcq","q":"……………………..develops slowly, is usually less severe, and lasts a long time.","o":["Acute Disease","Super infection","Latent Disease","Chronic Disease"],"c":3},
+{"n":79,"s":"m","sec":"m1","num":"79","type":"mcq","q":"………………….a secondary infection that happens after good bacteria are destroyed, often after taking broad-spectrum antibiotics.","o":["Super infection","Latent infection","Mixed Infection","Local Infection"],"c":0},
+{"n":80,"s":"m","sec":"m1","num":"80","type":"mcq","q":"………………….is recovered host but still spread germs","o":["Acute carriers","convalescent carriers","intermittent carriers","chronic carriers"],"c":1},
+{"n":81,"s":"m","sec":"m1","num":"81","type":"mcq","q":"…………………..is a Fixed types of microorganisms living permanently in specific areas for a long time","o":["Resident Flora","Transient Flora","Virus","pathogenic microbes"],"c":0},
+{"n":82,"s":"m","sec":"m1","num":"82","type":"mcq","q":"…………………..is a disease-causing bacteria carried by a person without making them sick.","o":["Acute Disease","Super infection","Carrier State","Chronic Disease"],"c":2},
+{"n":83,"s":"e","sec":"e1","num":"1","type":"mcq","q":"What is the fundamental definition of medical ethics as a professional system?","o":["Legal rules","Moral principles","Hospital policies","Billing codes"],"c":1},
+{"n":84,"s":"e","sec":"e1","num":"2","type":"mcq","q":"How do the sources and creation of laws fundamentally differ from ethics?","o":["Governing authorities","Culture only","Personal conscience","Philosophy alone"],"c":0},
+{"n":85,"s":"e","sec":"e1","num":"3","type":"mcq","q":"What is the typical consequence of violating ethical principles rather than breaking laws?","o":["Prison","Fines","Loss of trust","Court trials"],"c":2},
+{"n":86,"s":"e","sec":"e1","num":"4","type":"mcq","q":"Which historical scenario represents an action that was completely legal but deeply unethical?","o":["Hiding people","Segregation","Preventing murder","Emergency care"],"c":1},
+{"n":87,"s":"e","sec":"e1","num":"5","type":"mcq","q":"Which scenario describes an action that is technically illegal yet morally right?","o":["Enforcing apartheid","Stealing records","Hiding persecuted people","Skipping consent"],"c":2},
+{"n":88,"s":"e","sec":"e1","num":"6","type":"mcq","q":"What are patient rights primarily designed to protect during medical care?","o":["Profits","Legal immunity","Dignity and safety","Public health"],"c":2},
+{"n":89,"s":"e","sec":"e1","num":"7","type":"mcq","q":"What clear information must a patient receive before agreeing to a procedure via informed consent?","o":["Free care","Treatment facts and risks","Surgical immunity","Prescriptions"],"c":1},
+{"n":90,"s":"e","sec":"e1","num":"8","type":"mcq","q":"Can a patient legally and ethically refuse medical treatment if doctors advise against it?","o":["Never","Court order only","Emergencies only","Yes, always"],"c":3},
+{"n":91,"s":"e","sec":"e1","num":"9","type":"mcq","q":"What do the four core pillars of clinical medical ethics consist of?","o":["Law and order","Autonomy and justice","Privacy and consent","Diagnosis and cure"],"c":1},
+{"n":92,"s":"e","sec":"e1","num":"10","type":"mcq","q":"Which ethical principle specifically respects a patient's right to independent self- determination?","o":["Outcomes","Self-determination","Finances","History"],"c":1},
+{"n":93,"s":"e","sec":"e1","num":"11","type":"mcq","q":"What does the principle of beneficence require medical providers to actively do?","o":["Promote well-being","Avoid all treatments","Enforce strict laws","Ignore choices"],"c":0},
+{"n":94,"s":"e","sec":"e1","num":"12","type":"mcq","q":"What is the fundamental clinical meaning behind the principle of non-maleficence?","o":["Maximize profit","Do no harm","Guarantee cures","Enforce rules"],"c":1},
+{"n":95,"s":"e","sec":"e1","num":"13","type":"mcq","q":"Why is evidence-based practice considered vital in healthcare according to the text?","o":["Minimize harm","Replace ethics","Stop laws","Eliminate costs"],"c":0},
+{"n":96,"s":"e","sec":"e1","num":"14","type":"mcq","q":"Which of the following is considered a real-world application of non-maleficence?","o":["Painful drugs","Choosing safer treatments","Working untrained","Ignoring complaints"],"c":1},
+{"n":97,"s":"e","sec":"e1","num":"15","type":"mcq","q":"What does the principle of justice demand regarding healthcare services and resources?","o":["Paying patients only","Fair resource distribution","Prioritizing doctors","Government control"],"c":1},
+{"n":98,"s":"e","sec":"e1","num":"16","type":"mcq","q":"What is the fundamental definition and active duty of the ethical principle of \"Beneficence\"?","o":["Doing good and taking positive steps to promote a patient's overall wellbeing","Avoiding all forms of medical treatment to prevent physical suffering","Distributing scarce hospital resources based on the patient's wealth","Allowing competent adults to refuse life-sustaining treatments"],"c":0},
+{"n":99,"s":"e","sec":"e1","num":"17","type":"mcq","q":"How does the principle of \"Beneficence\" fundamentally differ from \"Non-Maleficence\"?","o":["Non-maleficence requires proactive measures, while beneficence is a passive duty","Beneficence requires a conscious, positive effort to improve health, unlike the passive duty of non-maleficence","Non-maleficence applies only to surgical procedures, whereas beneficence applies to billing","There is no distinction between the two foundational principles"],"c":1},
+{"n":100,"s":"e","sec":"e1","num":"18","type":"mcq","q":"What does the ethical principle of \"Autonomy\" guarantee for a competent patient?","o":["The right to receive free medical care regardless of clinical needs","Absolute immunity from any surgical complications or side effects","The obligation to follow a doctor's orders without asking questions","The right to make voluntary, informed decisions about their healthcare even against medical advice"],"c":3},
+{"n":101,"s":"e","sec":"e1","num":"19","type":"mcq","q":"Which of the following is considered a key component required to fulfill patient autonomy?","o":["Strict hospital administrative policies","Informed consent, mental capacity, and voluntariness","Prioritizing the doctor's personal judgment over patient choices","Mandatory family approval for all standard treatments"],"c":1},
+{"n":102,"s":"e","sec":"e1","num":"20","type":"mcq","q":"What does the principle of \"Justice\" primarily demand within healthcare settings?","o":["Treating all people fairly and providing equal access based on clinical need","Prioritizing wealthy patients who can pay for advanced treatments","Allocating intensive care units based on who arrived at the hospital first","Restricting medical resources exclusively to insured individuals"],"c":0},
+{"n":103,"s":"e","sec":"e1","num":"21","type":"mcq","q":"Which type of justice deals with the fair allocation of limited medical supplies and ICU beds?","o":["Procedural justice","Restorative justice","Distributive justice","Retributive justice"],"c":2},
+{"n":104,"s":"e","sec":"e1","num":"22","type":"mcq","q":"What is the primary purpose of medical \"Advocacy\" by healthcare providers?","o":["Managing hospital financial accounts and billing errors","Speaking up for a patient's rights, needs, and preferences to ensure safe care","Replacing the need for clinical informed consent procedures","Enforcing strict government laws on pharmaceutical companies"],"c":1},
+{"n":105,"s":"e","sec":"e1","num":"23","type":"mcq","q":"Which ethical principle stands for dedication, truthfulness, and honoring commitments to patients?","o":["Justice","Autonomy","Fidelity","Beneficence"],"c":2},
+{"n":106,"s":"e","sec":"e1","num":"24","type":"mcq","q":"What do the additional ethical principles of \"Totality and Integrity\" suggest regarding patient care?","o":["Focusing solely on the diseased organ rather than the whole person","Considering the entire patient and all aspects of their wellbeing when planning care","Ignoring potential adverse effects if a treatment is generally effective","Prioritizing financial gains over medical interventions"],"c":1},
+{"n":107,"s":"e","sec":"e1","num":"25","type":"mcq","q":"How long is a physician required to maintain the medical records of indoor patients according to the text?","o":["1 year from the date of treatment","5 years from the patient's discharge","3 years from the date of commencement of the treatment","Indefinitely without any time limit"],"c":2},
+{"n":108,"s":"e","sec":"e1","num":"26","type":"mcq","q":"When should a physician clearly announce and display their professional fees?","o":["After the surgical operation or treatment is completely finished","Before rendering service and starting the treatment or operation","Only if the patient specifically asks for a financial invoice","At the end of each calendar year"],"c":1},
+{"n":109,"s":"e","sec":"e1","num":"27","type":"mcq","q":"What action must a doctor take if an examination or medical treatment exceeds their professional capacity?","o":["Continue the treatment anyway to avoid losing financial profit","Discharge the patient immediately without a referral","Summon another doctor who possesses the necessary ability","Ask the family members to perform the procedure"],"c":2},
+{"n":110,"s":"e","sec":"e1","num":"28","type":"mcq","q":"What obligation does a physician assume when agreeing to attend to a patient's medical case?","o":["An obligation to continue caring for the case as long as it requires attention","The right to transfer the patient at any moment without notice","Complete immunity from any medical malpractice claims","The option to stop treatment if the patient asks questions"],"c":0},
+{"n":111,"s":"e","sec":"e1","num":"29","type":"mcq","q":"In what manner should a mentally sound adult be informed before obtaining their medical consent?","o":["Using complex medical jargon and technical Latin terminology","With all relevant facts in non-medical terms and a language they understand","Through a written legal contract prepared by hospital lawyers","By allowing family members to decide on their behalf"],"c":1},
+{"n":112,"s":"e","sec":"e1","num":"30","type":"mcq","q":"Under what condition must a doctor provide emergency care according to humanitarian duty?","o":["Only if the patient pays in advance for the emergency services","Always, unless assured that others are willing and able to provide such care","Only during normal working hours in private clinics","Only if the hospital administration approves the admission"],"c":1},
+{"n":113,"s":"e","sec":"e1","num":"31","type":"mcq","q":"What is a primary duty of a nurse regarding patient care and interventions?","o":["Prescribing advanced surgical medications independently","Providing all interventions with respect and preserving dignity","Determining hospital financial budgets and operational costs","Enforcing legal penalties for medical malpractice"],"c":1},
+{"n":114,"s":"e","sec":"e1","num":"32","type":"mcq","q":"Which factor should nurses ignore or look past when considering a patient's demands?","o":["Age, sex, race, culture, religion, and economic status","Clinical diagnosis and vital medical history records","Emergency symptoms and acute physiological distress","Written consent forms and authorized treatment plans"],"c":0},
+{"n":115,"s":"e","sec":"e1","num":"33","type":"mcq","q":"What key responsibility does a lab technician have regarding laboratory operations?","o":["Performing routine functions, maintaining equipment, and ensuring safe waste disposal","Diagnosing patient illnesses and prescribing pharmaceutical treatments directly","Conducting major surgical procedures in operating rooms","Discharging patients from hospital intensive care units"],"c":0},
+{"n":116,"s":"e","sec":"e1","num":"34","type":"mcq","q":"What is a core duty of a radiology technician during patient imaging procedures?","o":["Preparing the room, positioning the patient correctly, and operating X-ray machines safely","Analyzing laboratory blood cultures and preparing chemical reagents","Administering general anesthesia before invasive surgeries","Managing hospital administrative files and insurance billing"],"c":0},
+{"n":117,"s":"e","sec":"e1","num":"35","type":"mcq","q":"What is defined as the key to an effective health profession-patient relationship and successful treatment?","o":["Strict legal contracts and financial guarantees","The patient's trust in the health profession","Advanced hospital infrastructure and modern architecture","Fast administrative admission procedures"],"c":1},
+{"n":118,"s":"e","sec":"e1","num":"36","type":"mcq","q":"How is \"Professional Competence\" defined in medical practice?","o":["The constant and conscious use of communication, knowledge, technical skills, and clinical reasoning","The ability to maximize financial profits from clinical operations","The strict enforcement of government health laws","The speed at which a doctor completes surgical operations"],"c":0},
+{"n":119,"s":"e","sec":"e1","num":"37","type":"mcq","q":"Which of the following is considered a core principle of medical professionalism?","o":["Prioritization and welfare of the patient based on altruism and trust","Maximizing institutional profits over patient clinical needs","Restricting healthcare access based on social status","Avoiding patient communication to save clinical time"],"c":0},
+{"n":120,"s":"e","sec":"e1","num":"38","type":"mcq","q":"What does \"Consent\" legally and ethically mean in a medical context?","o":["A voluntary agreement, compliance, and permission between parties","A mandatory legal contract signed by hospital administrators","An order given by a doctor that cannot be questioned","A financial receipt for medical services rendered"],"c":0},
+{"n":121,"s":"e","sec":"e1","num":"39","type":"mcq","q":"When is a medical consent considered legally invalid due to lack of freedom?","o":["When it is caused by coercion, undue influence, fraud, or misrepresentation","When it is signed in the presence of a professional nurse","When it is given verbally for a minor clinical examination","When it is documented in the patient's medical file"],"c":0},
+{"n":122,"s":"e","sec":"e1","num":"40","type":"mcq","q":"What is the legal consequence of examining, treating, or operating on a patient without consent?","o":["It is regarded in law as assault, and the patient may sue for damages","It is considered standard medical practice in emergencies","It carries no legal weight as long as the treatment is beneficial","It results in a minor administrative warning only"],"c":0},
+{"n":123,"s":"e","sec":"e1","num":"41","type":"mcq","q":"Which type of consent is established when a patient comes to a physician with a problem or holds out an arm for an injection?","o":["Written consent","Informed consent","Implied consent","Coerced consent"],"c":2},
+{"n":124,"s":"e","sec":"e1","num":"42","type":"mcq","q":"For which of the following procedures is a written consent strictly required?","o":["Routine physical limb examinations and lung auscultation","Minor clinical examinations like collection of blood for lab tests","Major diagnostic procedures like endoscopy and all surgical operations","Standard oral consultations in a private clinic"],"c":2},
+{"n":125,"s":"e","sec":"e1","num":"43","type":"mcq","q":"What key details must be communicated to a patient to obtain proper informed consent?","o":["Disease condition, nature of treatment, alternatives, risks, and benefits","Hospital construction costs and maintenance budgets","The personal background and education history of the physician","Government tax regulations on medical devices"],"c":0},
+{"n":126,"s":"e","sec":"e1","num":"44","type":"mcq","q":"In what language should a patient be informed before giving their medical consent?","o":["Complex Latin medical terminology and advanced pharmacology terms","Simple language that they can understand","Written legal jargon prepared by hospital attorneys","Foreign languages requested by family members"],"c":1},
+{"n":127,"s":"e","sec":"e1","num":"45","type":"mcq","q":"What is a recognized exception where medical treatment can be performed without prior consent?","o":["When the patient is wealthy and can pay for immediate care","Emergency situations to save a life, limb, or an organ","When the patient asks too many questions about the procedure","During routine outpatient check-ups"],"c":1},
+{"n":128,"s":"e","sec":"e1","num":"46","type":"mcq","q":"Which of the following is considered an example of an \"incompetent patient\" unable to make decisions?","o":["Conscious patients in a routine outpatient clinic","Unconscious patients, such as those in a coma","Capable adults with full mental clarity and awareness","Legal guardians signing standard medical documents"],"c":1},
+{"n":129,"s":"e","sec":"e1","num":"47","type":"mcq","q":"What does the ethical concept of \"Therapeutic Privilege\" allow a doctor to do?","o":["Withhold medical risk details if sharing them could cause serious psychological harm","Force any patient to undergo surgery without a family relative present","Charge excessive financial fees for emergency medical services","Ignore hospital regulations regarding patient confidentiality records"],"c":0},
+{"n":130,"s":"e","sec":"e1","num":"48","type":"mcq","q":"Under therapeutic privilege, if risk details are withheld from a patient, who must the doctor inform?","o":["The local police authorities and legal courts","A capable and competent family relative","The hospital financial accounting department","Pharmaceutical company representatives"],"c":1},
+{"n":131,"s":"e","sec":"e1","num":"49","type":"mcq","q":"Under what condition is a medical consent considered legally invalid?","o":["When it is obtained through fraud, misrepresentation, or coercion","When it is signed in the presence of a professional nurse","When it is given verbally for a minor clinical examination","When it is documented in writing by the attending physician"],"c":0},
+{"n":132,"s":"e","sec":"e1","num":"50","type":"mcq","q":"What is legally required if a patient chooses to exercise their right of informed refusal?","o":["The patient must be immediately discharged from the hospital without care","The refusal must be documented in writing and signed by the patient, doctor, and a witness","The doctor must force the treatment using reasonable physical force","The case must be referred to a criminal court judge"],"c":1},
+{"n":133,"s":"e","sec":"e1","num":"51","type":"mcq","q":"Which medical procedure requires explicit, formal consent before it is performed?","o":["Standard visual observation in a waiting room","Basic non-invasive temperature checks","Procedures like surgery, anesthesia, or blood transfusions","General verbal health consultations"],"c":2},
+{"n":134,"s":"e","sec":"e1","num":"52","type":"mcq","q":"What is the strict legal rule regarding the medical examination of crime victims?","o":["A victim of a crime cannot be examined without their consent","Courts can force any victim to undergo medical exams against their will","Police officers can perform the medical examination directly","Consent is optional if the crime is reported publicly"],"c":0},
+{"n":135,"s":"e","sec":"e1","num":"53","type":"mcq","q":"How are arrested criminal suspects handled regarding medical exams that provide evidence?","o":["They must always give voluntary written consent before any check","A registered doctor can examine them without consent using reasonable force if needed","They are completely exempt from any physical examinations","Only family members can authorize their medical tests"],"c":1},
+{"n":136,"s":"e","sec":"e1","num":"54","type":"mcq","q":"Who should ideally perform medical examinations of female patients according to professional guidelines?","o":["A male surgeon specialized in emergency care","A female doctor or under a female doctor's supervision","Any available hospital administrative staff member","Medical students without clinical supervision"],"c":1},
+{"n":137,"s":"e","sec":"e1","num":"55","type":"mcq","q":"What must be done if no female doctor is available to examine a female patient?","o":["Refuse the medical examination entirely until a female doctor arrives","Have a male doctor examine her while one or more female nurses are present in the room","Perform the examination with no other staff present in the room","Ask male family members to assist with the physical exam"],"c":1},
+{"n":138,"s":"e","sec":"e1","num":"56","type":"mcq","q":"Why are human relations considered crucial in healthcare environments?","o":["Because healthcare workers deal with people who have complex needs and unique backgrounds","Because they replace the need for advanced medical technology","Because they focus exclusively on hospital financial profits","Because they eliminate all medical errors in clinics"],"c":0},
+{"n":139,"s":"e","sec":"e1","num":"57","type":"mcq","q":"What are the three main psychological and social aspects that make up human beings?","o":["Physical, financial, and legal aspects","Emotional, intelligent, and social beings","Administrative, technical, and operational behaviors","Academic, professional, and commercial traits"],"c":1},
+{"n":140,"s":"e","sec":"e1","num":"58","type":"mcq","q":"How do good human relations and supportive management impact employee retention?","o":["Employees are more likely to stay longer when treated with respect, reducing turnover","Employees are encouraged to resign and find other jobs quickly","Management can reduce employee salaries without friction","Staff members stop communicating with department managers"],"c":0},
+{"n":141,"s":"e","sec":"e1","num":"59","type":"mcq","q":"What effect do open communication and strong teamwork have on workplace innovation?","o":["They prevent employees from sharing new creative ideas","They inspire employees to propose new designs and processes to stay competitive","They slow down daily hospital administrative operations","They increase departmental disputes and misunderstandings"],"c":1},
+{"n":142,"s":"e","sec":"e1","num":"60","type":"mcq","q":"How does management build strong relationships and promote optimum resource utilization?","o":["By ignoring employee needs and enforcing strict punishments","By understanding employee needs and supporting their personal goals to boost motivation","By cutting all funding for staff training programs","By restricting resource access to senior managers only Put true or false"],"c":1},
+{"n":143,"s":"e","sec":"e2","num":"1","type":"mcq","q":"Medical ethics represents a system of moral principles and values that guide the professional behavior of healthcare workers.","o":["True","False"],"c":0},
+{"n":144,"s":"e","sec":"e2","num":"2","type":"mcq","q":"Ethics and the formal law are identical concepts derived from the exact same legislative sources.","o":["True","False"],"c":1},
+{"n":145,"s":"e","sec":"e2","num":"3","type":"mcq","q":"An action can sometimes be completely legal according to governing authorities yet considered deeply unethical.","o":["True","False"],"c":0},
+{"n":146,"s":"e","sec":"e2","num":"4","type":"mcq","q":"Violating professional medical ethics always leads to official prison sentences or government fines.","o":["True","False"],"c":1},
+{"n":147,"s":"e","sec":"e2","num":"5","type":"mcq","q":"Historical systems like racial segregation and apartheid were legally enforced by governments but were morally wrong.","o":["True","False"],"c":0},
+{"n":148,"s":"e","sec":"e2","num":"6","type":"mcq","q":"Patient rights are established rules designed to protect a person's dignity, privacy, and safety during medical care.","o":["True","False"],"c":0},
+{"n":149,"s":"e","sec":"e2","num":"7","type":"mcq","q":"Patients do not have the legal or ethical right to refuse medical treatment if doctors advise against it.","o":["True","False"],"c":1},
+{"n":150,"s":"e","sec":"e2","num":"8","type":"mcq","q":"Personal health data must remain secure and private under applicable healthcare laws and regulations.","o":["True","False"],"c":0},
+{"n":151,"s":"e","sec":"e2","num":"9","type":"mcq","q":"The four core pillars of clinical ethics include autonomy, beneficence, non-maleficence, and justice.","o":["True","False"],"c":0},
+{"n":152,"s":"e","sec":"e2","num":"10","type":"mcq","q":"Autonomy refers strictly to the doctor's independent right to choose a treatment plan without patient input.","o":["True","False"],"c":1},
+{"n":153,"s":"e","sec":"e2","num":"11","type":"mcq","q":"Beneficence requires medical providers to actively promote the patient's well-being and best outcomes.","o":["True","False"],"c":0},
+{"n":154,"s":"e","sec":"e2","num":"12","type":"mcq","q":"Non-maleficence means that treatments should intentionally create avoidable risks and physical suffering for the patient.","o":["True","False"],"c":1},
+{"n":155,"s":"e","sec":"e2","num":"13","type":"mcq","q":"Evidence-based practice plays a vital role in healthcare by minimizing the risk of harm to individuals.","o":["True","False"],"c":0},
+{"n":156,"s":"e","sec":"e2","num":"14","type":"mcq","q":"Skipping an ineffective, harsh cancer drug that only causes pain is a real-world application of avoiding harm.","o":["True","False"],"c":0},
+{"n":157,"s":"e","sec":"e2","num":"15","type":"mcq","q":"Healthcare students or nurses should perform complex medical tasks they are not trained to do rather than asking for help.","o":["True","False"],"c":1},
+{"n":158,"s":"e","sec":"e2","num":"16","type":"mcq","q":"Beneficence is the active duty of healthcare providers to act in the best interest of the patient and promote their wellbeing.","o":["True","False"],"c":0},
+{"n":159,"s":"e","sec":"e2","num":"17","type":"mcq","q":"Unlike non-maleficence, beneficence requires a conscious, affirmative effort to improve a patient's condition.","o":["True","False"],"c":0},
+{"n":160,"s":"e","sec":"e2","num":"18","type":"mcq","q":"Autonomy gives a competent patient the right to make decisions about their healthcare even if they oppose medical advice.","o":["True","False"],"c":0},
+{"n":161,"s":"e","sec":"e2","num":"19","type":"mcq","q":"Medical decisions made by a patient under autonomy can be heavily influenced by coercion and excessive pressure from doctors.","o":["True","False"],"c":1},
+{"n":162,"s":"e","sec":"e2","num":"20","type":"mcq","q":"Distributive justice in healthcare refers to the fair and honest allocation of limited medical supplies and ICU beds.","o":["True","False"],"c":0},
+{"n":163,"s":"e","sec":"e2","num":"21","type":"mcq","q":"Healthcare justice dictates that medical care should depend primarily on a person's wealth rather than clinical need.","o":["True","False"],"c":1},
+{"n":164,"s":"e","sec":"e2","num":"22","type":"mcq","q":"Professional advocacy involves speaking up for a patient's rights and removing barriers like language gaps and insurance denials.","o":["True","False"],"c":0},
+{"n":165,"s":"e","sec":"e2","num":"23","type":"mcq","q":"Fidelity is an ethical principle that permits healthcare professionals to deceive or manipulate patients when necessary.","o":["True","False"],"c":1},
+{"n":166,"s":"e","sec":"e2","num":"24","type":"mcq","q":"Totality and integrity mean that healthcare providers should consider the entire patient and all aspects of their wellbeing.","o":["True","False"],"c":0},
+{"n":167,"s":"e","sec":"e2","num":"25","type":"mcq","q":"A health professional's reward or financial gain should always be considered the primary motivation in medical practice.","o":["True","False"],"c":1},
+{"n":168,"s":"e","sec":"e2","num":"26","type":"mcq","q":"A physician must maintain the medical records of indoor patients for a period of at least 3 years from starting treatment.","o":["True","False"],"c":0},
+{"n":169,"s":"e","sec":"e2","num":"27","type":"mcq","q":"A doctor is encouraged to practice their profession while heavily influenced by personal profit motives.","o":["True","False"],"c":1},
+{"n":170,"s":"e","sec":"e2","num":"28","type":"mcq","q":"A doctor must preserve absolute secrecy regarding the private health information of their patients.","o":["True","False"],"c":0},
+{"n":171,"s":"e","sec":"e2","num":"29","type":"mcq","q":"A mentally sound adult must be told all relevant facts in complex medical jargon that is difficult to understand before giving consent.","o":["True","False"],"c":1},
+{"n":172,"s":"e","sec":"e2","num":"30","type":"mcq","q":"Providing emergency care is considered a humanitarian duty for a doctor unless others are already willing and able to provide it","o":["True","False"],"c":0},
+{"n":173,"s":"e","sec":"e2","num":"31","type":"mcq","q":"A nurse must provide nursing interventions while respecting the patient and preserving their dignity.","o":["True","False"],"c":0},
+{"n":174,"s":"e","sec":"e2","num":"32","type":"mcq","q":"Nurses are permitted to treat patients differently based on their economic status, race, or political beliefs.","o":["True","False"],"c":1},
+{"n":175,"s":"e","sec":"e2","num":"33","type":"mcq","q":"Lab technicians are responsible for setting up, adjusting, and calibrating laboratory equipment like pH meters and centrifuges.","o":["True","False"],"c":0},
+{"n":176,"s":"e","sec":"e2","num":"34","type":"mcq","q":"Radiology technicians do not need to follow safety procedures when operating X-ray machines.","o":["True","False"],"c":1},
+{"n":177,"s":"e","sec":"e2","num":"35","type":"mcq","q":"The patient's trust in the health profession is considered the key to a successful diagnosis and treatment.","o":["True","False"],"c":0},
+{"n":178,"s":"e","sec":"e2","num":"36","type":"mcq","q":"Professional competence involves the constant and conscious use of communication, knowledge, and clinical skills","o":["True","False"],"c":0},
+{"n":179,"s":"e","sec":"e2","num":"37","type":"mcq","q":"Prioritizing the welfare of the patient based on altruism is a core principle of medical professionalism.","o":["True","False"],"c":0},
+{"n":180,"s":"e","sec":"e2","num":"38","type":"mcq","q":"Consent in medicine means forcing a patient to comply with medical treatments against their will.","o":["True","False"],"c":1},
+{"n":181,"s":"e","sec":"e2","num":"39","type":"mcq","q":"A medical consent is legally valid even if it is obtained through coercion, fraud, or misrepresentation.","o":["True","False"],"c":1},
+{"n":182,"s":"e","sec":"e2","num":"40","type":"mcq","q":"Examining or operating on a patient without consent is regarded in law as assault, even if done in good faith.","o":["True","False"],"c":0},
+{"n":183,"s":"e","sec":"e2","num":"41","type":"mcq","q":"Implied consent is suitable for major surgical operations and general anesthesia.","o":["True","False"],"c":1},
+{"n":184,"s":"e","sec":"e2","num":"42","type":"mcq","q":"Written consent is mandatory for major diagnostic procedures like endoscopy and all surgical operations.","o":["True","False"],"c":0},
+{"n":185,"s":"e","sec":"e2","num":"43","type":"mcq","q":"Informed consent requires explaining the disease condition, treatment nature, risks, and success rates in simple language.","o":["True","False"],"c":0},
+{"n":186,"s":"e","sec":"e2","num":"44","type":"mcq","q":"Unconscious patients, individuals under the influence of drugs, or psychiatric patients are considered incompetent to give standard consent.","o":["True","False"],"c":0},
+{"n":187,"s":"e","sec":"e2","num":"45","type":"mcq","q":"Emergency situations to save life, limb, or an organ serve as an exception where treatment can proceed without prior consent.","o":["True","False"],"c":0},
+{"n":188,"s":"e","sec":"e2","num":"46","type":"mcq","q":"Unconscious patients, individuals under the influence of drugs, and those with dementia are classified as incompetent patients.","o":["True","False"],"c":0},
+{"n":189,"s":"e","sec":"e2","num":"47","type":"mcq","q":"Therapeutic privilege allows a doctor to completely hide medical conditions from a patient's family members as well.","o":["True","False"],"c":1},
+{"n":190,"s":"e","sec":"e2","num":"48","type":"mcq","q":"Medical consent is legally valid even if it is obtained through fraud, lying, or misrepresentation.","o":["True","False"],"c":1},
+{"n":191,"s":"e","sec":"e2","num":"49","type":"mcq","q":"If a patient refuses medical treatment, the refusal must be documented in writing and signed by the patient, doctor, and a witness.","o":["True","False"],"c":0},
+{"n":192,"s":"e","sec":"e2","num":"50","type":"mcq","q":"Basic procedures like drawing blood, surgery, or anesthesia require explicit and valid consent before performance","o":["True","False"],"c":0},
+{"n":193,"s":"e","sec":"e2","num":"51","type":"mcq","q":"A court can legally force a victim of a crime to undergo a medical examination against their personal will.","o":["True","False"],"c":1},
+{"n":194,"s":"e","sec":"e2","num":"52","type":"mcq","q":"Arrested criminal suspects can be examined without consent by a registered doctor if the exam provides crime evidence.","o":["True","False"],"c":0},
+{"n":195,"s":"e","sec":"e2","num":"53","type":"mcq","q":"Medical examinations of female patients should ideally be performed by a male physician without any chaperones.","o":["True","False"],"c":1},
+{"n":196,"s":"e","sec":"e2","num":"54","type":"mcq","q":"Human relations in healthcare involve treating patients as unique individuals rather than just another disease case.","o":["True","False"],"c":0},
+{"n":197,"s":"e","sec":"e2","num":"55","type":"mcq","q":"Human beings are strictly physical entities with no emotional or social needs.","o":["True","False"],"c":1},
+{"n":198,"s":"e","sec":"e2","num":"56","type":"mcq","q":"Positive human relations and effective communication improve employee motivation, job satisfaction, and productivity.","o":["True","False"],"c":0},
+{"n":199,"s":"e","sec":"e2","num":"57","type":"mcq","q":"Supportive workplace relationships have no impact on reducing employee turnover or job dissatisfaction.","o":["True","False"],"c":1},
+{"n":200,"s":"e","sec":"e2","num":"58","type":"mcq","q":"Open communication and shared ideas among team members hinder creativity and business adaptability","o":["True","False"],"c":1},
+{"n":201,"s":"e","sec":"e2","num":"59","type":"mcq","q":"Good human relations help managers take proactive action to resolve conflicts before they escalate.","o":["True","False"],"c":0},
+{"n":202,"s":"e","sec":"e2","num":"60","type":"mcq","q":"Strong relationships between management and workers help an organization grow and ensure efficient resource utilization.","o":["True","False"],"c":0}
+];
+var act='m',ST={};
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function byN(n){for(var i=0;i<ALL.length;i++)if(ALL[i].n==n)return ALL[i];return null}
+function opts(q){return q.type==='match'?NSTM:q.o}
+function ctext(q){return L[q.c]+') '+opts(q)[q.c]}
+function buildPanels(){
+  var tb='',pn='';
+  TABS.forEach(function(t){
+    ST[t.k]={res:{},qs:ALL.filter(function(q){return q.s===t.k})};
+    tb+='<button type="button" class="tab" data-tab="'+t.k+'">'+t.label+'<small>'+ST[t.k].qs.length+' سؤال</small></button>';
+    pn+='<section class="panel" id="p_'+t.k+'"><div id="cards_'+t.k+'"></div>'+
+      '<button class="btn sbtn" data-sub="'+t.k+'" id="sub_'+t.k+'" disabled>عرض نتيجة القسم 🎯</button>'+
+      '<div class="resbox" id="result_'+t.k+'" style="display:none"></div></section>';
+  });
+  $('tabs').innerHTML=tb;$('panels').innerHTML=pn;
+  TABS.forEach(function(t){renderCards(t.k)});
+}
+function renderCards(k){
+  var h='',last='';
+  ST[k].qs.forEach(function(q){
+    if(q.sec!==last){last=q.sec;h+='<div class="sec">'+esc(SECS[q.sec].title)+'</div>';}
+    h+='<div class="card" id="c'+q.n+'"><div class="qh"><span class="qn">'+esc(q.num)+'</span><span class="tag">'+esc(SECS[q.sec].tag)+'</span></div>';
+    h+='<div class="qt">'+esc(q.q)+'</div>';
+    if(q.type==='match'){
+      h+='<div class="hint">اختر التعريف الصحيح لهذا المصطلح</div><select class="inp" id="sel'+q.n+'"><option value="">— اختر —</option>'+NSTM.map(function(s,i){return '<option value="'+i+'">'+L[i]+'. '+esc(s)+'</option>'}).join('')+'</select>';
+      h+='<div class="btns"><button type="button" class="btn" data-act="mcheck" data-n="'+q.n+'">تحقق ✔</button></div>';
+    }else{
+      h+='<div class="opts">';
+      q.o.forEach(function(o,i){h+='<button type="button" class="opt" data-act="opt" data-n="'+q.n+'" data-i="'+i+'"><b>'+L[i]+'</b><span>'+esc(o)+'</span></button>'});
+      h+='</div>';
+    }
+    h+='<div class="fb" id="fb'+q.n+'"></div></div>';
+  });
+  $('cards_'+k).innerHTML=h;
+}
+function updateBar(){
+  var s=ST[act],total=s.qs.length,done=0,c=0;
+  for(var x in s.res){done++;if(s.res[x])c++;}
+  $('sNum').textContent=done+'/'+total;$('sC').textContent='✅ '+c;$('sW').textContent='❌ '+(done-c);
+  $('sP').textContent='📊 '+(done?Math.round(c/done*100):0)+'%';
+  $('sFill').style.width=(total?done/total*100:0)+'%';
+  $('sub_'+act).disabled=done<1;
+}
+function setTab(k,noScroll){
+  act=k;
+  var ts=document.querySelectorAll('.tab');
+  for(var i=0;i<ts.length;i++)ts[i].classList.toggle('on',ts[i].getAttribute('data-tab')===k);
+  TABS.forEach(function(t){var p=$('p_'+t.k);if(t.k===k)p.classList.add('on');else p.classList.remove('on')});
+  updateBar();
+  if(!noScroll)window.scrollTo(0,0);
+}
+function move(d){
+  var i=0;TABS.forEach(function(t,j){if(t.k===act)i=j});
+  var j=i+d;if(j<0||j>=TABS.length)return;
+  setTab(TABS[j].k);
+}
+function answer(q,i,ok){
+  var s=ST[q.s];s.res[q.n]=ok;
+  var card=$('c'+q.n);card.className='card '+(ok?'ok':'no');
+  var fb=$('fb'+q.n);fb.className='fb '+(ok?'ok':'no');fb.style.display='block';
+  fb.innerHTML=(ok?'✅ إجابة صحيحة!':'❌ الإجابة الصحيحة: <b dir="ltr">'+esc(ctext(q))+'</b>')+(q.exp?'<div dir="rtl" style="margin-top:6px">'+esc(q.exp)+'</div>':'');
+  updateBar();
+}
+function showResults(k){
+  var s=ST[k],done=0,c=0;
+  s.qs.forEach(function(q){if(s.res[q.n]!==undefined){done++;if(s.res[q.n])c++;}});
+  var p=done?Math.round(c/done*100):0,left=s.qs.length-done;
+  var msg=(p>=90?'ممتاز! مستواك رائع 🌟':p>=75?'جيد جداً، كمّل كده 👏':p>=50?'مستوى كويس، راجع الأخطاء وهتتحسن 💪':'محتاج مراجعة أكتر، ذاكر وجرّب تاني 📚')+(left?'  (لسه فاضل '+left+' سؤال بدون إجابة)':'');
+  var h='<div id="result" style="display:block"><h2>🎉 النتيجة</h2><div class="big">'+c+' / '+done+'</div><div>'+msg+'</div>';
+  h+='<div class="stats"><div class="stat c">✅ صح<br>'+c+'</div><div class="stat w">❌ غلط<br>'+(done-c)+'</div><div class="stat p">📊 النسبة<br>'+p+'%</div></div>';
+  h+='<div class="btns" style="justify-content:center"><button class="btn" data-again="'+k+'">🔄 إعادة القسم</button><button class="btn gh" data-top="1">🏠 للأعلى</button></div>';
+  var wr=s.qs.filter(function(q){return s.res[q.n]===false});
+  h+='<div class="rev">'+(wr.length?'<h3>📝 مراجعة الأسئلة الغلط ('+wr.length+')</h3>'+wr.map(function(q){return '<div class="ri"><div class="q">'+esc(SECS[q.sec].tag)+' — Q'+esc(q.num)+': '+esc(q.q)+'</div><div>✅ <b dir="ltr">'+esc(ctext(q))+'</b></div></div>'}).join(''):'<h3>🎯 كل إجاباتك صح!</h3>')+'</div></div>';
+  var box=$('result_'+k);box.innerHTML=h;box.style.display='block';box.scrollIntoView();
+}
+function resetTab(k){
+  ST[k].res={};renderCards(k);$('result_'+k).style.display='none';updateBar();window.scrollTo(0,0);
+}
+function onClick(e){
+  var b=e.target;
+  while(b&&b!==document&&!(b.getAttribute&&(b.getAttribute('data-act')||b.getAttribute('data-tab')||b.getAttribute('data-sub')||b.getAttribute('data-again')||b.getAttribute('data-top'))))b=b.parentNode;
+  if(!b||b===document)return;
+  var t=b.getAttribute('data-tab');if(t){setTab(t);return}
+  var sb=b.getAttribute('data-sub');if(sb){showResults(sb);return}
+  var ag=b.getAttribute('data-again');if(ag){resetTab(ag);return}
+  if(b.getAttribute('data-top')){window.scrollTo(0,0);return}
+  var q=byN(b.getAttribute('data-n'));
+  if(!q||ST[q.s].res[q.n]!==undefined)return;
+  var act2=b.getAttribute('data-act');
+  if(act2==='opt'){
+    var i=+b.getAttribute('data-i'),bs=$('c'+q.n).querySelectorAll('.opt');
+    for(var j=0;j<bs.length;j++){var x=+bs[j].getAttribute('data-i');if(x===q.c)bs[j].classList.add('right');else if(x===i)bs[j].classList.add('bad');bs[j].disabled=true;}
+    answer(q,i,i===q.c);
+  }else if(act2==='mcheck'){
+    var sl=$('sel'+q.n);if(!sl.value)return;
+    var ok=(+sl.value===q.c);sl.className='inp '+(ok?'ok':'no');sl.disabled=true;b.disabled=true;answer(q,+sl.value,ok);
+  }
+}
+var tx=0,ty=0,tt=0,tok=false;
+function ts(e){var t=e.changedTouches[0];tx=t.clientX;ty=t.clientY;tt=Date.now();var n=e.target&&e.target.tagName;tok=!(n==='SELECT'||n==='INPUT'||n==='OPTION')}
+function te(e){
+  if(!tok)return;var t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>2*Math.abs(dy)&&Date.now()-tt<900)move(dx<0?1:-1);
+}
+function init(){
+  buildPanels();
+  document.addEventListener('click',onClick);
+  document.addEventListener('touchstart',ts,{passive:true});
+  document.addEventListener('touchend',te,{passive:true});
+  document.addEventListener('keydown',function(e){var n=e.target&&e.target.tagName;if(n==='INPUT'||n==='SELECT')return;if(e.key==='ArrowRight')move(1);else if(e.key==='ArrowLeft')move(-1)});
+  setTab('m',true);
+}
+init();
+</script>
+</body>
+</html>
